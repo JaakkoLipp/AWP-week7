@@ -67,7 +67,7 @@ router.post(
   passport.authenticate("local", {
     //
     //successRedirect: "/",
-    failureRedirect: "/login-fail",
+    failureRedirect: "/api/login-fail",
   }),
   (req, res) => {
     // Successful authentication
