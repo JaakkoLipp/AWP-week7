@@ -5,7 +5,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const session = require("express-session");
-
+express().use(passport.session());
 let users = [];
 
 function userchecker(username) {
@@ -16,6 +16,8 @@ function userchecker(username) {
   }
   return false;
 }
+const initializePassport = require("../passport-config");
+initializePassport(passport, getuser, getUserById);
 
 function getuser(username) {
   return users.find((user) => user.username === username);
@@ -60,21 +62,21 @@ router.get("/user/list", (req, res) => {
   res.json(users);
 });
 
-app.post(
-  "/login",
+router.post(
+  "/user/login",
   checkNotAuthenticated,
   passport.authenticate("local", {
     //
     //successRedirect: "/",
     failureRedirect: "/login-fail",
-    failureFlash: true,
   }),
   (req, res) => {
     // Successful authentication
     res.sendStatus(200);
   }
 );
-app.get("/login-fail", (req, res) => {
+
+router.get("/login-fail", (req, res) => {
   res.sendStatus(401);
 });
 
