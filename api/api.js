@@ -3,7 +3,9 @@ const dotenv = require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const passport = require("passport");
+const session = require("express-session");
+
 let users = [];
 
 function userchecker(username) {
@@ -16,12 +18,11 @@ function userchecker(username) {
 }
 
 function getuser(username) {
-  for (let user of users) {
-    if (user.username === username) {
-      return user;
-    }
-  }
-  return null;
+  return users.find((user) => user.username === username);
+}
+
+function getUserById(id) {
+  return users.find((user) => user.id === id);
 }
 
 router.post("/user/register", async (req, res) => {
@@ -59,39 +60,29 @@ router.get("/user/list", (req, res) => {
   res.json(users);
 });
 
-router.post(
-  "/user/login",
-  body("username").trim().escape(),
-  body("password").escape(),
-  async (req, res) => {
-    if (userchecker(req.body.username)) {
-      let user = getuser(req.body.username);
-      bcrypt.compare(req.body.password, user.password, (err, Matches) => {
-        if (err) {
-          res.status(500).send("Error hashing password");
-          return;
-        }
-        if (Matches) {
-          const jwtPayload = {
-            id: user._id,
-            username: user.username,
-          };
-          jwt.sign(
-            jwtPayload,
-            process.env.SECRET,
-            {
-              expiresIn: 120,
-            },
-            (err, token) => {
-              res.json({ success: true, token });
-            }
-          );
-        }
-      });
-    } else {
-      return res.status(403).json({ message: "Login faile :(" });
-    }
+app.post(
+  "/login",
+  checkNotAuthenticated,
+  passport.authenticate("local", {
+    //
+    //successRedirect: "/",
+    failureRedirect: "/login-fail",
+    failureFlash: true,
+  }),
+  (req, res) => {
+    // Successful authentication
+    res.sendStatus(200);
   }
 );
+app.get("/login-fail", (req, res) => {
+  res.sendStatus(401);
+});
+
+function checkNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return res.redirect("/");
+  }
+  return next();
+}
 
 module.exports = router;

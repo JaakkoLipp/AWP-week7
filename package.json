@@ -15,6 +15,7 @@
     "express-session": "^1.17.3",
     "jsonwebtoken": "^9.0.2",
     "morgan": "~1.9.1",
+    "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "passport-session": "^1.0.2"
   }
