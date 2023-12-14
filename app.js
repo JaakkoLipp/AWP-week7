@@ -6,7 +6,6 @@ const dotenv = require("dotenv").config();
 
 const session = require("express-session");
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -21,7 +20,7 @@ app.use(
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: true },
+    //cookie: { secure: true },
   })
 );
 

@@ -4,7 +4,6 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
-const session = require("express-session");
 express().use(passport.session());
 let users = [];
 
