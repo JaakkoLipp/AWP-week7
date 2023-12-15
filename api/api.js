@@ -86,4 +86,22 @@ function checkNotAuthenticated(req, res, next) {
   return next();
 }
 
+function checkAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  return res.sendStatus(401);
+}
+
+router.get("/secret", checkAuthenticated, (req, res) => {
+  res.sendStatus(200);
+});
+
+function checkNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return res.redirect("/");
+  }
+  return next();
+}
+
 module.exports = router;

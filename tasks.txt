@@ -1,0 +1,83 @@
+3. Secret route
+
+Now that we have a session cookie that we can use for authentication, let's create a route that can be used only if the user has logged in. Create a GET route "/api/secret". This route can only be accessed if the token is valid. If the authentication is valid, the server should respond with a status code 200. and if the user is not authenticated, the server should respond with a status 401.
+4. Login redirection
+
+If the user is already logged in, no login or registration requests from that client should be handled. Make the POST routes "/api/user/register" and "/api/user/login" redirect the user to somewhere else (for example just "/") if the user tried to access those routes while logged in.
+5. Todos
+
+Authenticated user should be able to create a todo list, and add items to existing list. Make POST route to "/api/todos". A user can send todos as a JSON object (example below). The todos of a user should be saved to an array in an object with an id of the user and a list of todos sent by the user. If a user sending the todos is authenticated, the server should respond with the user's todo object, and if not, the server should respond with a 401 status code.
+
+Also, create a GET route to "/api/todos/list, which responds with a list that contains all the todo objects saved to the server.
+
+Two request made by the same user:
+
+Request #1 by user with id 514426
+
+{
+    "todo": "First thing to do"
+}
+
+
+Response #1
+
+{
+    "id": 514426,
+    "todos": [
+        "First thing to do"
+    ]
+}
+
+
+Request #2 by the same user:
+
+{
+    "todo": "Second thing to do"
+}
+
+
+Response #2
+
+{
+    "id": 514426,
+    "todos": [
+        "First thing to do",
+        "Second thing to do"
+    ]
+}
+
+
+Request #3 by user with id 885999
+
+{
+    "todo": "User 2 first thing"
+}
+
+
+Response #3
+
+{
+    "id": 885999,
+    "todo": [
+        "User 2 first thing"
+    ]
+}
+
+
+Response from /api/todos/list
+
+[
+    {
+        "id": 514426,
+        "todos": [
+            "First thing to do",
+            "Second thing to do"
+        ]
+    },
+    {
+        "id": 885999,
+        "todos": [
+            "User 2 first thing"
+        ]
+    }
+]
