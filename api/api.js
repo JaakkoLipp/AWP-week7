@@ -106,7 +106,7 @@ function checkNotAuthenticated(req, res, next) {
 }
 
 router.post("/todos", checkAuthenticated, (req, res, next) => {
-  const newTodo = body.todo;
+  const newTodo = req.body.todo; // Use req.body.todo instead of body.todo
   const userId = req.user.id;
   let userTodo = todos.find((todo) => todo.id === userId);
 
@@ -115,9 +115,12 @@ router.post("/todos", checkAuthenticated, (req, res, next) => {
     todos.push(userTodo);
   }
 
-  userTodo.todos.push(newTodo);
-
-  res.json(userTodo);
+  if (newTodo) {
+    userTodo.todos.push(newTodo);
+    res.json(userTodo);
+  } else {
+    res.status(400).send("Todo content is required.");
+  }
 });
 
 router.get("/api/todos/list", (req, res) => {
