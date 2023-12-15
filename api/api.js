@@ -26,7 +26,7 @@ function getUserById(id) {
   return users.find((user) => user.id === id);
 }
 
-router.post("/user/register", async (req, res) => {
+router.post("/user/register", checkNotAuthenticated, async (req, res) => {
   const username = req.body.username;
 
   bcrypt.genSalt(10, function (err, salt) {
