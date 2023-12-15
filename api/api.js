@@ -119,7 +119,7 @@ router.post("/todos", checkAuthenticated, (req, res, next) => {
   res.json(userTodo);
 });
 
-router.get("/api/todos/list", (req, res) => {
+router.get("/todos/list", (req, res) => {
   res.json(todos);
 });
 
