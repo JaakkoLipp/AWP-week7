@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs");
 const passport = require("passport");
 express().use(passport.session());
 let users = [];
+let todos = [];
 
 function userchecker(username) {
   for (let user of users) {
@@ -103,5 +104,24 @@ function checkNotAuthenticated(req, res, next) {
   }
   return next();
 }
+
+router.post("/todos", checkAuthenticated, (req, res, next) => {
+  const newTodo = body.todo;
+  const userId = req.user.id;
+  let userTodo = todos.find((todo) => todo.id === userId);
+
+  if (!userTodo) {
+    userTodo = { id: userId, todos: [] };
+    todos.push(userTodo);
+  }
+
+  userTodo.todos.push(newTodo);
+
+  res.json(userTodo);
+});
+
+router.get("/api/todos/list", (req, res) => {
+  res.json(todos);
+});
 
 module.exports = router;
